@@ -4,9 +4,9 @@ import { initialCards } from "./components/cards";
 
 import { openPopup, closePopup } from "./components/modal.js";
 
-import { createCard, removeCard } from "./components/card.js";
+import { createCard, removeCard, cardLike } from "./components/card.js";
 
-// @todo: Темплейт карточки и её расположение.
+// Темплейт карточки и её расположение.
 
 export const cardTemplate = document.querySelector("#card-template").content;
 
@@ -15,7 +15,7 @@ export const cardPlacement = document.querySelector(".places__list");
 // Вывести карточки на страницу
 
 initialCards.forEach(function (cardData) {
-  const cardContent = createCard(cardData, removeCard, openImage);
+  const cardContent = createCard(cardData, removeCard, openImage, cardLike);
 
   cardPlacement.append(cardContent);
 });
@@ -70,7 +70,8 @@ function handleFormAdd(evt) {
   const newPlace = createCard(
     { name: newPlaceName.value, link: newPlaceURL.value },
     removeCard,
-    openImage
+    openImage,
+    cardLike
   );
 
   cardPlacement.prepend(newPlace);
@@ -98,7 +99,7 @@ const profileDescription = document.querySelector(".profile__description");
 
 editButton.addEventListener("click", () => {
   openPopup(profileEditPopup);
-  popupInputsValue();
+  fillEditorsPopupInputs();
   addForm.reset();
 });
 
@@ -108,22 +109,23 @@ closeEditor.addEventListener("click", () => {
 
 // Сохранение полей ввода формы.
 
-function popupInputsValue() {
+function fillEditorsPopupInputs() {
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
 }
+
 // Обработчик отправки формы.
 
-function handleFormSubmit(evt) {
+function handleEditorsFormSubmit(evt) {
   evt.preventDefault();
 
   const jobValue = jobInput.value;
   const nameValue = nameInput.value;
 
-  popupInputsValue(nameValue, jobValue);
+  fillEditorsPopupInputs(nameValue, jobValue);
   profileTitle.textContent = nameValue;
   profileDescription.textContent = jobValue;
   closePopup(profileEditPopup);
 }
 
-editForm.addEventListener("submit", handleFormSubmit);
+editForm.addEventListener("submit", handleEditorsFormSubmit);

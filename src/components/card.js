@@ -7,9 +7,9 @@ export function createCard(cardData, removeCard, openImage, cardLike) {
     .querySelector(".places__item.card")
     .cloneNode(true);
 
-  const deleteButton = cardContent.querySelector(".card__delete-button");
-
   cardContent.querySelector(".card__title").textContent = cardData.name;
+
+  const deleteButton = cardContent.querySelector(".card__delete-button");
 
   const likeButton = cardContent.querySelector(".card__like-button");
 
@@ -18,21 +18,23 @@ export function createCard(cardData, removeCard, openImage, cardLike) {
   cardImage.src = cardData.link;
   cardImage.alt = cardData.name;
 
-  // Функция лайка карточки
-
-  function cardLike() {
-    likeButton.classList.toggle("card__like-button_is-active");
-  }
-
-  likeButton.addEventListener("click", () => cardLike(cardContent));
+  likeButton.addEventListener("click", cardLike);
   cardImage.addEventListener("click", () => openImage(cardData));
   deleteButton.addEventListener("click", () => removeCard(cardContent));
 
   return cardContent;
 }
 
+// Функция лайка карточки
+
+export function cardLike(evt) {
+  const cardElement = evt.target.closest(".card");
+  const putLike = cardElement.querySelector(".card__like-button");
+  putLike.classList.toggle("card__like-button_is-active");
+}
+
 // Функция удаления карточки
 
 export function removeCard(cardData) {
-    cardData.remove();
+  cardData.remove();
 }

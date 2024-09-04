@@ -1,3 +1,22 @@
 .popup__form {
   margin-top: 27px;
 }
+
+.form__set {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+.form__set_active {
+  max-height: none;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: all;
+}
+
+.form__field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 38px 0;
+}

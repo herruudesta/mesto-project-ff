@@ -5,8 +5,8 @@ import { openPopup, closePopup } from "./components/modal.js";
 import { createCard, removeCard, cardLike } from "./components/card.js";
 
 import {
-  enableValidation,
   disableValidation,
+  enableValidation,
 } from "./components/validation.js";
 
 import {
@@ -22,6 +22,15 @@ import {
 export const cardTemplate = document.querySelector("#card-template").content;
 
 const cardPlacement = document.querySelector(".places__list");
+
+const validationConfig= {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+};
 
 // Рендер карточек других пользователей.
 
@@ -124,19 +133,19 @@ function fillEditorsPopupInputs() {
 function handleEditorsFormSubmit(evt) {
   evt.preventDefault();
 
-  const nameValue = nameInput.value;
-  const jobValue = jobInput.value;
+  const name = nameInput.value;
+  const description = jobInput.value;
 
-  fillEditorsPopupInputs(nameValue, jobValue);
+  fillEditorsPopupInputs(name, description);
 
   const saveButton = editForm.querySelector(".popup__button");
 
   saveButtonLoadingText(true, saveButton);
 
-  editUserInfo(nameValue, jobValue)
+  editUserInfo(name, description)
     .then(() => {
-      profileTitle.textContent = nameValue;
-      profileDescription.textContent = jobValue;
+      profileTitle.textContent = name;
+      profileDescription.textContent = description;
       closePopup(profileEditPopup);
     })
     .catch((err) => {
@@ -244,13 +253,5 @@ Promise.all([getUserInfo(), getInitialCards()])
 
 // Валидация.
 
-export const validationConfig = {
-  formSelector: ".popup__form",
-  inputSelector: ".popup__input",
-  submitButtonSelector: ".popup__button",
-  inactiveButtonClass: "popup__button_disabled",
-  inputErrorClass: "popup__input_type_error",
-  errorClass: "popup__error_visible",
-};
 
 enableValidation(validationConfig);

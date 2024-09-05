@@ -5,30 +5,22 @@ import { deleteOwnCard, placeLikeCard, dislikeCard } from "./api";
 // Функция лайка карточки
 
 export const cardLike = (likeButton, cardId, likeCounter) => {
-  if (!likeButton.classList.contains("card__like-button_is-active")) {
-    placeLikeCard(cardId)
-      .then((cardData) => {
-        likeButton.classList.add("card__like-button_is-active");
-        likeCounter.textContent = cardData.likes.length;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  } else {
-    dislikeCard(cardId)
-      .then((cardData) => {
-        likeButton.classList.remove("card__like-button_is-active");
-        likeCounter.textContent = cardData.likes.length;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+  const likeMethod = likeButton.classList.contains(
+    "card__like-button_is-active"
+  )
+    ? dislikeCard
+    : placeLikeCard;
+  likeMethod(cardId)
+    .then((cardData) => {
+      likeButton.classList.toggle("card__like-button_is-active");
+      likeCounter.textContent = cardData.likes.length;
+    })
+    .catch((err) => console.log(err));
 };
 
 // Функция создания карточки
 
-export function createCard(cardData, removeCard, cardLike, openImage, cardId) {
+export function createCard(cardData, removeCard, cardLike, openImage, userId) {
   const cardContent = cardTemplate
     .querySelector(".places__item")
     .cloneNode(true);
@@ -50,7 +42,7 @@ export function createCard(cardData, removeCard, cardLike, openImage, cardId) {
     cardLike(likeButton, cardData._id, likeCounter);
   });
 
-  if (cardData.likes.some((item) => item._id === cardId)) {
+  if (cardData.likes.some((item) => item._id === userId)) {
     likeButton.classList.add("card__like-button_is-active");
   }
 
@@ -60,12 +52,10 @@ export function createCard(cardData, removeCard, cardLike, openImage, cardId) {
 
   const deleteButton = cardContent.querySelector(".card__delete-button");
 
-  deleteButton.addEventListener("click", () => {
-    removeCard(cardContent, cardData._id);
-  });
-
-  if (cardId === cardData.owner._id) {
-    deleteButton.classList.add("card__delete-button_is-visible");
+  if (userId === cardData.owner._id) {
+    deleteButton.addEventListener("click", () => {
+      removeCard(cardContent, cardData._id);
+    });
   } else {
     deleteButton.classList.add("card__delete-button_is-hidden");
   }

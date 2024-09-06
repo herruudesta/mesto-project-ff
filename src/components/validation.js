@@ -36,25 +36,25 @@ const invalidInputError = (inputUnits) => {
   });
 };
 
-const disableSaveButton = (button, inactivateClass) => {
-  button.classList.remove(inactivateClass);
-  button.disabled = false;
-};
-
 const saveButtonStatus = (
   inputUnits,
   submitButtonSelector,
   validationConfig
 ) => {
   if (invalidInputError(inputUnits)) {
-    submitButtonSelector.classList.add(validationConfig.inactiveButtonClass);
-    submitButtonSelector.disabled = true;
-  } else {
     disableSaveButton(
       submitButtonSelector,
       validationConfig.inactiveButtonClass
     );
+  } else {
+    submitButtonSelector.disabled = false;
+    submitButtonSelector.classList.remove(validationConfig.inactiveButtonClass);
   }
+};
+
+const disableSaveButton = (button, inactivateClass) => {
+  button.classList.remove(inactivateClass);
+  button.disabled = false;
 };
 
 // Отмена валидации.
